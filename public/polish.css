@@ -7,12 +7,12 @@ h1,h2,h3,.page-end p{text-wrap:balance}
 
 /* ---------- hero entrance ---------- */
 @media (prefers-reduced-motion:no-preference){
-  .hero-copy>*,.inner-hero>*{animation:p-rise .9s cubic-bezier(.2,.8,.2,1) both}
+  .hero-copy>*,.inner-hero>*{animation:p-rise .9s cubic-bezier(.2,.8,.2,1) backwards}
   .hero-copy>*:nth-child(1),.inner-hero>*:nth-child(1){animation-delay:.05s}
   .hero-copy>*:nth-child(2),.inner-hero>*:nth-child(2){animation-delay:.14s}
   .hero-copy>*:nth-child(3),.inner-hero>*:nth-child(3){animation-delay:.26s}
   .hero-copy>*:nth-child(4),.inner-hero>*:nth-child(4){animation-delay:.36s}
-  .hero .benefits>div{animation:p-rise .8s cubic-bezier(.2,.8,.2,1) both}
+  .hero .benefits>div{animation:p-rise .8s cubic-bezier(.2,.8,.2,1) backwards}
   .hero .benefits>div:nth-child(1){animation-delay:.46s}
   .hero .benefits>div:nth-child(2){animation-delay:.54s}
   .hero .benefits>div:nth-child(3){animation-delay:.62s}

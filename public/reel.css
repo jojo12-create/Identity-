@@ -27,7 +27,7 @@
 .reel-veil{
   position:absolute;inset:0;pointer-events:none;
   background:
-    linear-gradient(90deg, rgba(250,246,239,.97) 0%, rgba(250,246,239,.94) 26%, rgba(250,246,239,.72) 38%, rgba(250,246,239,.18) 52%, rgba(250,246,239,0) 62%),
+    linear-gradient(90deg, rgba(250,246,239,.98) 0%, rgba(250,246,239,.96) 34%, rgba(250,246,239,.8) 43%, rgba(250,246,239,.3) 53%, rgba(250,246,239,0) 62%),
     linear-gradient(180deg, rgba(250,246,239,.85) 0%, rgba(250,246,239,0) 16%),
     linear-gradient(0deg, rgba(243,239,232,.9) 0%, rgba(243,239,232,0) 14%);
 }

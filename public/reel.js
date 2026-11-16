@@ -37,6 +37,8 @@ function start() {
   const counterEl = controls?.querySelector('.reel-count');
   const pauseBtn = controls?.querySelector('.reel-pause');
   const fade = section.querySelector('.reel-fade');
+  const RATE = 1.6; // the recordings run faster: more of each site in less time
+  videos.forEach(v => { v.defaultPlaybackRate = RATE; v.playbackRate = RATE; });
 
   let index = 0, paused = false, visible = true;
 
@@ -52,6 +54,7 @@ function start() {
     videos.forEach((v, i) => {
       if (i === index && visible && !paused && !document.hidden && !reduce) {
         if (v.readyState === 0) { v.preload = 'auto'; v.load(); }
+        v.playbackRate = RATE;
         const p = v.play(); if (p && p.catch) p.catch(() => {});
       } else if (!v.paused) v.pause();
     });
@@ -179,6 +182,40 @@ function start() {
       return { pos, look };
     }
 
+    /* each stay on a site is cut into shots: wide, close on a detail with a pan, a second detail, pull out */
+    const HOLD = 5.8;
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    function makeShots() {
+      const r1 = [rnd(-0.2, 0.3), rnd(0.2, 0.5)];      // upper half: the headline, the menu
+      const r2 = [rnd(0.05, 0.5), rnd(-0.5, -0.1)];      // lower half: the buttons, the cards
+      return [
+        { at: 0, o: [0, 0], z: 1 },
+        { at: 1.0, o: [0.02, 0], z: 1.03 },
+        { at: 1.65, o: r1, z: rnd(1.6, 1.85) },
+        { at: 3.0, o: [r1[0] + rnd(0.1, 0.2), r1[1] - 0.05], z: rnd(1.75, 2.0) },
+        { at: 3.6, o: r2, z: rnd(1.5, 1.7) },
+        { at: 5.0, o: [r2[0] - rnd(0.06, 0.12), r2[1] + 0.04], z: rnd(1.6, 1.8) },
+        { at: HOLD, o: [0, 0], z: 1.064 },
+      ];
+    }
+    let shots = makeShots();
+    const v3 = new THREE.Vector3();
+    function shotPose(i, t) {
+      let k = 0;
+      while (k < shots.length - 2 && t >= shots[k + 1].at) k++;
+      const A = shots[k], B = shots[k + 1];
+      const e = ease(clamp((t - A.at) / (B.at - A.at), 0, 1));
+      const ox = lerp(A.o[0], B.o[0], e), oy = lerp(A.o[1], B.o[1], e);
+      const z = Math.exp(lerp(Math.log(A.z), Math.log(B.z), e));
+      const P = planes[i];
+      const ang = P.g.rotation.y - 0.14 / z;            // closer shots face the screen more squarely
+      const n = v3.set(Math.sin(ang), 0, Math.cos(ang));
+      const look = P.g.localToWorld(new THREE.Vector3(ox * PW / 2, oy * PH / 2, 0));
+      const pos = look.clone().addScaledVector(n, dist / z);
+      pos.y += 0.18 / z;
+      return { pos, look };
+    }
+
     function layoutCam() {
       const w = section.clientWidth, h = stage.clientHeight || section.clientHeight;
       if (!w || !h) return;
@@ -209,7 +246,7 @@ function start() {
     }
     const holdTime = i => {
       const d = planes[i].video.duration;
-      return Number.isFinite(d) && d > 3 ? clamp(d - 0.6, 5, 9) : 8.5;
+      return reduce ? 8.5 : HOLD;
     };
 
     function go(i, manual) {
@@ -226,7 +263,7 @@ function start() {
       if (fade) fade.classList.add('is-on');
       setTimeout(() => {
         index = target; from = to = target; label(); playActive();
-        mode = 'hold'; t0 = performance.now(); holdFor = holdTime(index);
+        mode = 'hold'; t0 = performance.now(); holdFor = holdTime(index); shots = makeShots();
         if (fade) fade.classList.remove('is-on');
         draw();
       }, reduce ? 0 : 520);
@@ -240,19 +277,18 @@ function start() {
       pointer.sx = lerp(pointer.sx, pointer.x, 0.04); pointer.sy = lerp(pointer.sy, pointer.y, 0.04);
 
       if (mode === 'travel') {
-        const dur = 2.6, u = clamp(t / dur, 0, 1), e = ease(u);
+        const dur = 1.9, u = clamp(t / dur, 0, 1), e = ease(u);
         const A = poseFor(from, 0.06), B = poseFor(to, 0);
         cam.pos.lerpVectors(A.pos, B.pos, e);
         cam.look.lerpVectors(A.look, B.look, ease(clamp(u * 1.08 - 0.04, 0, 1)));
         const arc = Math.sin(Math.PI * e);
         cam.pos.z += arc * dist * 0.42; cam.pos.y += arc * 0.35;
         camera.position.copy(cam.pos); camera.lookAt(cam.look);
-        camera.rotateZ(Math.sin(Math.PI * e) * (to > from ? -0.035 : 0.035));
+        camera.rotateZ(Math.sin(Math.PI * e) * (to > from ? -0.06 : 0.06));
         planes.forEach((P, i) => { P.level = lerp(P.level, i === to ? 1 : 0.68, 0.06); });
-        if (u >= 1) { mode = 'hold'; t0 = now; holdFor = holdTime(index); }
+        if (u >= 1) { mode = 'hold'; t0 = now; holdFor = holdTime(index); shots = makeShots(); }
       } else {
-        const push = reduce ? 0 : clamp(t / holdFor, 0, 1) * 0.06;  // slow push-in while the site plays
-        const P = poseFor(index, push);
+        const P = reduce ? poseFor(index, 0) : shotPose(index, Math.min(t, HOLD));
         camera.position.copy(P.pos);
         camera.position.x += pointer.sx * 0.35; camera.position.y -= pointer.sy * 0.2;
         camera.lookAt(P.look);

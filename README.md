@@ -20,7 +20,7 @@ Les commits suivants portent la refonte 3D, guidée par les skills `design-taste
 ### Bannière cinématographique (page d'accueil) — `reel.js`, `reel.css`
 - Derrière toute la première section, les 4 sites réalisés (Adrian Rodriguez, NBA Edge Lab, Tandem, Atelier Volt)
   flottent dans un espace 3D crème, chacun comme un écran de verre qui diffuse sa vraie vidéo de navigation.
-- Une caméra s'arrête sur un site pendant que sa vidéo défile (environ 9 s, avec une lente avancée), puis s'envole
+- Les vidéos tournent en 1,6×. Sur chaque site (environ 6 s), la caméra enchaîne trois plans : vue d'ensemble, gros plan sur un détail avec panoramique, second gros plan, puis recul. Elle s'envole ensuite
   vers le suivant : recul, glissement, léger roulis, rapprochement. Après le dernier, un fondu relance la boucle.
   Les sites voisins restent visibles en profondeur.
 - Un voile crème à gauche garde le texte lisible. La pastille donne le nom et le type du site, avec précédent, pause et suivant (44 px).
@@ -29,14 +29,18 @@ Les commits suivants portent la refonte 3D, guidée par les skills `design-taste
   aucune vidéo ne démarre seule. Le rendu s'arrête hors écran et quand l'onglet est masqué.
 - Three.js r169 embarqué (`public/vendor/three`), pas de CDN.
 
-### Logo 3D — `logo3d.js`, `logo3d.css` (toutes les pages)
-- Au repos « I. ». Les lettres de « dentity » se déplient une à une, pivotées en perspective ;
-  la sphère rouge laquée suit la dernière lettre et atterrit avec un rebond ; un reflet passe sur le mot ; puis tout se replie.
-  Joué au chargement, toutes les 14 s, au survol et au focus clavier. Sur mobile le logo reste « I. »,
-  sinon il chevaucherait le bouton « Démarrer mon projet ».
-- Logo du pied de page : déplié en permanence, avec une vague au survol.
-- Le point final des titres devient la même sphère ; celui du h1 tombe et rebondit à l'arrivée.
-- L'ancienne animation (`animation2.*`) est conservée dans le dépôt, mais n'est plus chargée.
+### Logo animé — `logo3d.js`, `logo3d.css` (toutes les pages)
+- Au repos « I. », avec une sphère rouge laquée comme point.
+- À l'ouverture, la sphère prend son élan puis bondit le long du mot. Chaque lettre jaillit de la ligne de base derrière elle
+  (étirement, dépassement, retour). Sur le « i », la sphère monte haut et se pose comme point du i, qui s'écrase sous le choc.
+  Elle redescend en point final avec deux rebonds, et l'impact envoie une onde élastique dans le mot, de droite à gauche.
+- À la fermeture, la sphère roule vers la gauche et aplatit chaque lettre sur son passage, puis se pose à côté du « I », qui rebondit.
+- Joué au chargement, toutes les 14 s, au survol et au focus. Le logo du pied de page, toujours ouvert, répond au survol par un rebond et une onde.
+  Animations réduites : immobile.
+
+### Titres en relief (toutes les pages)
+- Les gros titres (h1, h2, phrase de fin de page) sont laqués comme la sphère : reflet en haut de chaque ligne et ombre chaude.
+  Version claire automatique sur les sections sombres. Tous les points de fin de phrase des titres deviennent des sphères.
 
 ### Finitions — `polish.css` (toutes les pages)
 - Entrée du hero : le texte monte et devient net, une seule fois, au chargement.

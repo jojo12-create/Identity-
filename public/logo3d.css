@@ -1,0 +1,89 @@
+/* Identity — 3D logo (logo3d.js) and the glossy brand dot used on headings. */
+.brand.logo3d{
+  display:inline-flex;align-items:baseline;position:relative;color:#080808;
+  white-space:nowrap;line-height:1.1;text-decoration:none;
+}
+.logo3d .l3d{display:inline-flex;align-items:baseline;perspective:520px;perspective-origin:30% 50%}
+.logo3d .l3d-ch{
+  display:inline-block;width:0;overflow:visible;
+  transition:width .62s cubic-bezier(.7,0,.18,1);
+  transition-delay:calc((8 - var(--i)) * 34ms);
+}
+.brand.logo3d .l3d-face{color:#080808;
+  display:inline-block;transform-origin:0 70%;backface-visibility:hidden;
+  transform:rotateY(-100deg) translateZ(.12em);opacity:0;filter:blur(1.5px);
+  text-shadow:0 .018em 0 #3b3b3b, 0 .045em .05em rgba(0,0,0,.14);
+  transition:transform .55s cubic-bezier(.6,0,.4,1), opacity .3s ease, filter .3s ease, color .5s ease;
+  transition-delay:calc((8 - var(--i)) * 34ms);
+}
+.logo3d .l3d-first{width:auto}
+.logo3d .l3d-first .l3d-face{transform:none;opacity:1;filter:none}
+
+.logo3d.is-open .l3d-ch{width:var(--w);transition-delay:calc(var(--i) * 52ms)}
+.logo3d.is-open .l3d-face{
+  transform:none;opacity:1;filter:none;
+  transition:transform .8s cubic-bezier(.2,1.25,.32,1), opacity .35s ease, filter .4s ease, color .5s ease;
+  transition-delay:calc(var(--i) * 52ms);
+}
+/* measuring pass: everything laid out open, no transition */
+.logo3d.l3d-measure .l3d-ch{width:auto!important;transition:none!important}
+.logo3d.l3d-measure .l3d-face{transform:none!important;transition:none!important}
+
+/* the light passing over the word */
+.logo3d.is-glint .l3d-face{animation:l3d-glint .9s ease both;animation-delay:calc(var(--i) * 45ms)}
+@keyframes l3d-glint{0%,100%{color:#080808}45%{color:#8d8a86}}
+
+/* the dot: a glossy red sphere sitting on the baseline */
+.logo3d .l3d-dot{
+  position:relative;display:inline-block;width:.21em;height:.21em;margin-left:.045em;
+}
+.l3d-ball,.identity-final-dot{
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255,255,255,.95) 0 5%, rgba(255,255,255,0) 17%),
+    radial-gradient(circle at 70% 82%, rgba(255,150,150,.55) 0 6%, rgba(255,150,150,0) 26%),
+    radial-gradient(circle at 40% 35%, #ff4b55 0%, #e11924 38%, #a40c17 76%, #640610 100%);
+}
+.logo3d .l3d-ball{
+  position:absolute;inset:0;border-radius:50%;
+  box-shadow:0 .05em .07em rgba(110,8,16,.32);
+  transform-origin:50% 100%;
+}
+.logo3d .l3d-ball.is-hop{animation:l3d-hop .95s cubic-bezier(.3,.7,.4,1) both}
+@keyframes l3d-hop{
+  0%{transform:translateY(0) scale(1,1)}
+  10%{transform:translateY(0) scale(1.18,.8)}
+  34%{transform:translateY(-.42em) scale(.9,1.12)}
+  58%{transform:translateY(0) scale(1.16,.84)}
+  72%{transform:translateY(-.12em) scale(.97,1.04)}
+  86%{transform:translateY(0) scale(1.05,.95)}
+  100%{transform:translateY(0) scale(1,1)}
+}
+
+/* footer: unfolded, waves on hover */
+.logo3d.l3d-static .l3d-ch,.logo3d.l3d-static .l3d-face{transition:none}
+.logo3d.is-wave .l3d-face{animation:l3d-wave .7s cubic-bezier(.3,.7,.3,1) both;animation-delay:calc(var(--i) * 40ms)}
+@keyframes l3d-wave{
+  0%,100%{transform:none}
+  40%{transform:translateY(-.1em) rotateX(28deg)}
+}
+
+/* headings: the final dot becomes the same sphere */
+.identity-final-dot{
+  display:inline-block;width:.2em;height:.2em;margin-left:.05em;border-radius:50%;
+  overflow:hidden;color:transparent!important;vertical-align:baseline;line-height:0;font-size:inherit;
+  text-indent:1em;box-shadow:0 .04em .06em rgba(110,8,16,.28);
+}
+.hero-copy h1 .identity-final-dot{animation:l3d-drop 1.1s .95s cubic-bezier(.3,.7,.4,1) both;transform-origin:50% 100%}
+@keyframes l3d-drop{
+  0%{transform:translateY(-1.4em) scale(.9,1.1);opacity:0}
+  35%{transform:translateY(0) scale(1.22,.78);opacity:1}
+  55%{transform:translateY(-.32em) scale(.94,1.06)}
+  75%{transform:translateY(0) scale(1.08,.92)}
+  88%{transform:translateY(-.06em) scale(1)}
+  100%{transform:none;opacity:1}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .logo3d .l3d-ch,.logo3d .l3d-face{transition:none!important}
+  .logo3d .l3d-ball,.logo3d .l3d-face,.hero-copy h1 .identity-final-dot{animation:none!important}
+}

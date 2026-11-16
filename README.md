@@ -17,18 +17,17 @@ Les commits suivants portent la refonte 3D, guidée par les skills `design-taste
 
 ## Ce qui a changé
 
-### Hero 3D (page d'accueil) — `hero3d.js`, `hero3d.css`
-- Un ordinateur portable en aluminium modélisé en temps réel (WebGL, Three.js r169 embarqué, pas de CDN).
-- À l'arrivée : il entre fermé, le logo « I. » visible sur le capot, puis s'ouvre ; l'écran s'allume.
-  Une sculpture « I. » noire laquée sort du sol, et la sphère rouge tombe et rebondit.
-- **L'écran diffuse les vraies vidéos de navigation** (Adrian Rodriguez, NBA Edge Lab, Tandem, Atelier Volt) :
-  le carrousel existant (`site.js`) pilote toujours la lecture, la scène affiche la vidéo active.
-  Changement de projet : l'écran s'éteint et se rallume brièvement.
-- Le portable suit doucement le pointeur ; il oscille seul sur mobile.
-- Le carrousel devient une pastille sous le portable, avec le nom du projet en cours, et des boutons de 44 px.
-- Fond studio chaud à la place de la photo Unsplash chargée depuis un autre site.
-- Repli : sans WebGL, l'ancien portable CSS reste affiché. Animations réduites : pose finale, aucun mouvement.
-  Le rendu s'arrête quand le hero sort de l'écran ou quand l'onglet est masqué.
+### Bannière cinématographique (page d'accueil) — `reel.js`, `reel.css`
+- Derrière toute la première section, les 4 sites réalisés (Adrian Rodriguez, NBA Edge Lab, Tandem, Atelier Volt)
+  flottent dans un espace 3D crème, chacun comme un écran de verre qui diffuse sa vraie vidéo de navigation.
+- Une caméra s'arrête sur un site pendant que sa vidéo défile (environ 9 s, avec une lente avancée), puis s'envole
+  vers le suivant : recul, glissement, léger roulis, rapprochement. Après le dernier, un fondu relance la boucle.
+  Les sites voisins restent visibles en profondeur.
+- Un voile crème à gauche garde le texte lisible. La pastille donne le nom et le type du site, avec précédent, pause et suivant (44 px).
+- Sur mobile, la bannière passe sous le texte, en pleine largeur.
+- Repli sans WebGL : les vidéos s'enchaînent en fondu, en plein cadre. Animations réduites : la caméra reste fixe,
+  aucune vidéo ne démarre seule. Le rendu s'arrête hors écran et quand l'onglet est masqué.
+- Three.js r169 embarqué (`public/vendor/three`), pas de CDN.
 
 ### Logo 3D — `logo3d.js`, `logo3d.css` (toutes les pages)
 - Au repos « I. ». Les lettres de « dentity » se déplient une à une, pivotées en perspective ;

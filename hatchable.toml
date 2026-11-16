@@ -1,0 +1,16 @@
+# Identity : connexion de paiement à activer depuis Setup > APIs.
+# La connexion n'est pas requise pour consulter le site vitrine.
+[[api]]
+name = "stripe"
+auth = "api_key"
+base_url = "https://api.stripe.com"
+key_header = "Authorization"
+key_prefix = "Bearer "
+encoding = "form"
+description = "Encaissement des devis approuvés via Stripe Checkout."
+required = false
+
+[[secret]]
+name = "STRIPE_WEBHOOK_SECRET"
+required = false
+description = "Signature du webhook Stripe Checkout vers /api/webhooks/stripe."
